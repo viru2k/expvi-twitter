@@ -50,7 +50,7 @@
       "@api": ["apps/expvi-twitter/src/app/api/index.ts"],
       "@service": ["apps/expvi-twitter/src/app/api/services.ts"],
       "@model": ["apps/expvi-twitter/src/app/api/model/index.ts"],
-      "@store": ["apps/expvi-twitter/src/app/core/stores/index.ts"]
+      "@store": ["apps/expvi-twitter/src/app/store/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

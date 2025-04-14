@@ -1,1 +1,42 @@
-<p>login works!</p>
+<div class="login-container">
+  <div class="login-card">
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg"
+      alt="Twitter Logo"
+      class="logo"
+    />
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+      <input
+        pInputText
+        formControlName="email"
+        placeholder="Email"
+        class="w-full"
+      />
+
+      <input
+        pInputText
+        formControlName="password"
+        placeholder="Password"
+        type="password"
+        class="w-full"
+      />
+
+      <button
+        pButton
+        type="submit"
+        class="w-full login-button"
+        [disabled]="form.invalid || (isLoading$ | async)"
+      >
+        Next
+      </button>
+
+      <button type="button" class="p-button-link forgot">Forgot password?</button>
+    </form>
+
+    <div class="register-text">
+      Don't have an account?
+      <a routerLink="/auth/register">Sign Up</a>
+    </div>
+  </div>
+</div>
