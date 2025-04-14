@@ -165,7 +165,7 @@ If different than the generated base path, during app bootstrap, you can provide
 import { BASE_PATH } from '';
 
 bootstrap(AppComponent, [
-    { provide: BASE_PATH, useValue: 'https://your-web-service.com' },
+    { provide: BASE_PATH, useValue: 'http://127.0.0.1:8000' },
 ]);
 ```
 
@@ -177,7 +177,7 @@ import { BASE_PATH } from '';
 @NgModule({
     imports: [],
     declarations: [ AppComponent ],
-    providers: [ provide: BASE_PATH, useValue: 'https://your-web-service.com' ],
+    providers: [ provide: BASE_PATH, useValue: 'http://127.0.0.1:8000' ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule {}
@@ -190,7 +190,7 @@ First extend your `src/environments/*.ts` files by adding the corresponding base
 ```typescript
 export const environment = {
   production: false,
-  API_BASE_PATH: 'http://127.0.0.1:8080'
+  API_BASE_PATH: 'http://127.0.0.1:8000/'
 };
 ```
 

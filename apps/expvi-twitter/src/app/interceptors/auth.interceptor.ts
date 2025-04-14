@@ -9,20 +9,20 @@ import { Observable } from 'rxjs';
 import { LocalStorageService } from '../services/storage/local-storage.service';
 
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private localStorageService: LocalStorageService) {}
+  constructor(private localStorage: LocalStorageService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.localStorageService.getToken();
+    const token = this.localStorage.getToken();
 
     if (token) {
-      const cloned = req.clone({
+      const authReq = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
         }
       });
-      return next.handle(cloned);
+      return next.handle(authReq);
     }
 
     return next.handle(req);
