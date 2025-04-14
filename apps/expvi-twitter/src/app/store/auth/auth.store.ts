@@ -59,8 +59,7 @@ export class AuthStore extends ComponentStore<AuthState> {
   }));
 
   readonly login = this.effect<{
-    email: string;
-    password: string;
+    data: LoginUserRequest
     onSuccess?: () => void;
   }>((trigger$) =>
     trigger$.pipe(
@@ -68,14 +67,13 @@ export class AuthStore extends ComponentStore<AuthState> {
         this.setLoading(true);
         this.setLoginError(null);
       }),
-      switchMap(({ email, password, onSuccess }) =>
-        this.authService.loginUser({ email, password } as LoginUserRequest).pipe(
+      switchMap((loginUserRequest) =>
+        this.authService.loginUser(loginUserRequest.data).pipe(
           tap((response) => {
             const token = response?.data?.token;
             if (token) {
               this.localStorage.setToken(token);
               this.setToken(token);
-              onSuccess?.();
               this.router.navigate(['/tweets']);
             } else {
               this.setLoginError('Token no válido');
@@ -92,27 +90,22 @@ export class AuthStore extends ComponentStore<AuthState> {
   );
 
   readonly register = this.effect<{
-    name: string;
-    email: string;
-    password: string;
-    avatar_url?: string;
-    onSuccess?: () => void;
+    data: RegisterUserRequest
   }>((trigger$) =>
     trigger$.pipe(
       tap(() => {
         this.setLoading(true);
         this.setLoginError(null);
       }),
-      switchMap(({ name, email, password, avatar_url, onSuccess }) =>
+      switchMap((registerUserRequest) =>
         this.authService
-          .registerUser({ name, email, password, avatar_url } as RegisterUserRequest)
+          .registerUser(registerUserRequest.data)
           .pipe(
             tap((response) => {
               const token = response?.data?.token;
               if (token) {
                 this.localStorage.setToken(token);
                 this.setToken(token);
-                onSuccess?.();
                 this.router.navigate(['/tweets']);
               } else {
                 this.setLoginError('Token no válido');
