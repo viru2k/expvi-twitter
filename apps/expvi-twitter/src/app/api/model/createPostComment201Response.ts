@@ -7,16 +7,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Comment } from './comment';
 
 
-export interface LoginUserRequest { 
-    /**
-     * The email of the user.
-     */
-    email: string;
-    /**
-     * The password for the user
-     */
-    password: string;
+export interface CreatePostComment201Response { 
+    data?: Comment;
 }
 

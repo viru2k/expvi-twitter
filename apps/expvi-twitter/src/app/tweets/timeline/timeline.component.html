@@ -1,1 +1,6 @@
-<p>timeline works!</p>
+<div class="timeline">
+  <app-post-card *ngFor="let post of posts$ | async" [post]="post" />
+  <div #scrollAnchor class="scroll-anchor"></div>
+  <div *ngIf="isLoading$ | async" class="loading">Loading...</div>
+
+</div>

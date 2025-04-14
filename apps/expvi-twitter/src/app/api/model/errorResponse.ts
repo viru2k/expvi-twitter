@@ -9,14 +9,11 @@
  */
 
 
-export interface LoginUserRequest { 
-    /**
-     * The email of the user.
-     */
-    email: string;
-    /**
-     * The password for the user
-     */
-    password: string;
+/**
+ * An error occurred with the request
+ */
+export interface ErrorResponse { 
+    message?: string;
+    exception?: string;
 }
 

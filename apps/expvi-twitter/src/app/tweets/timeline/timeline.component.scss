@@ -1,0 +1,58 @@
+.timeline {
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.post {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .username {
+    font-weight: bold;
+  }
+}
+
+.content {
+  .media {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    margin-top: 0.5rem;
+    border-radius: 6px;
+  }
+}
+
+.meta {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.scroll-anchor {
+  height: 1px;
+}
+
+.loading {
+  text-align: center;
+  padding: 1rem;
+  font-weight: bold;
+  color: #666;
+}

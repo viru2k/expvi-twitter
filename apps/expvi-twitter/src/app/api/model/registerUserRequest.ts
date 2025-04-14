@@ -10,9 +10,21 @@
 
 
 export interface RegisterUserRequest { 
+    /**
+     * The user\'s name.
+     */
     name: string;
+    /**
+     * The url to the user\'s avatar.
+     */
     avatar_url?: string;
+    /**
+     * The email of the user.
+     */
     email: string;
+    /**
+     * The password for the user
+     */
     password: string;
 }
 

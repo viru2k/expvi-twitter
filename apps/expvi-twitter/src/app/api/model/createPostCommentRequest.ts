@@ -9,14 +9,10 @@
  */
 
 
-export interface LoginUserRequest { 
+export interface CreatePostCommentRequest { 
     /**
-     * The email of the user.
+     * The content of the comment
      */
-    email: string;
-    /**
-     * The password for the user
-     */
-    password: string;
+    text: string;
 }
 
