@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 
-const TOKEN_KEY = 'access_token';
+const TOKEN_KEY = 'expvi_token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
   setToken(token: string): void {
+    console.log(TOKEN_KEY,token);
     localStorage.setItem(TOKEN_KEY, token);
   }
 

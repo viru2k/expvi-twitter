@@ -74,7 +74,7 @@ export class AuthStore extends ComponentStore<AuthState> {
             if (token) {
               this.localStorage.setToken(token);
               this.setToken(token);
-              this.router.navigate(['/tweets']);
+              this.router.navigate(['/tweets/timeline']);
             } else {
               this.setLoginError('Token no válido');
             }
