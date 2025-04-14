@@ -1,12 +1,15 @@
-import { Post } from './../../api/model/';
+
+import { User } from './../../api/model/user';
+import { Post } from './../../api/model/post';
 import { Injectable } from '@angular/core';
+import { PostsService } from './..//../api/api/posts.service';
 import { ComponentStore } from '@ngrx/component-store';
  // Wrapper del API
 
-import { tap, switchMap, catchError, EMPTY, interval, withLatestFrom, map } from 'rxjs';
+import { tap, switchMap, catchError, EMPTY, interval, withLatestFrom, map, forkJoin } from 'rxjs';
 
 export interface TimelineState {
-  posts: Post[];
+  posts: Array<Post & { user?: User }>;
   isLoading: boolean;
   isPolling: boolean;
   nextCursor?: string;
@@ -23,7 +26,7 @@ const DEFAULT_STATE: TimelineState = {
 
 @Injectable({ providedIn: 'root' })
 export class TimelineStore extends ComponentStore<TimelineState> {
-  constructor(private postService: PostService) {
+  constructor(private postService: PostsService) {
     super(DEFAULT_STATE);
   }
 
@@ -66,15 +69,44 @@ export class TimelineStore extends ComponentStore<TimelineState> {
     lastPollTs: timestamp
   }));
 
-  // Initial load or search
-  readonly loadTimeline = this.effect((term$) =>
-    term$.pipe(
+/*   // Initial load or search
+  readonly loadTimeline = this.effect((trigger$) =>
+    trigger$.pipe(
       tap(() => this.setLoading(true)),
-      switchMap((term) =>
-        this.postService.listPosts({ search: term }).pipe(
+      switchMap(() =>
+        this.postService.listPosts().pipe( // sin argumentos
           tap((res) => {
-            this.setPosts(res.data || []);
-            this.setNextCursor(res.next_cursor);
+            this.setPosts(res?.data ?? []);
+            this.setNextCursor(res?.next_cursor);
+            this.setLastPollTs(Date.now());
+          }),
+          catchError(() => EMPTY),
+          tap(() => this.setLoading(false))
+        )
+      )
+    )
+  ); */
+
+  readonly loadTimeline = this.effect((trigger$) =>
+    trigger$.pipe(
+      tap(() => this.setLoading(true)),
+      switchMap(() =>
+        this.postService.listPosts().pipe(
+          switchMap((res) =>
+            forkJoin(
+              (res.data ?? [])
+                .filter((post) => post.id !== undefined)
+                .map((post) =>
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  this.postService.getPostUser(post.id!).pipe(
+                    map((user) => ({ ...post, user: user.data }))
+                  )
+                )
+            )
+          ),
+
+          tap((enrichedPosts) => {
+            this.setPosts(enrichedPosts);
             this.setLastPollTs(Date.now());
           }),
           catchError(() => EMPTY),
@@ -84,12 +116,13 @@ export class TimelineStore extends ComponentStore<TimelineState> {
     )
   );
 
+
   // 🔁 Scroll infinit
   readonly loadMore = this.effect(() =>
     this.select((s) => s.nextCursor).pipe(
       switchMap((cursor) =>
         cursor
-          ? this.postService.listPosts({ cursor }).pipe(
+          ? this.postService.listPosts(cursor ).pipe(
               tap((res) => {
                 this.appendPosts(res.data || []);
                 this.setNextCursor(res.next_cursor);

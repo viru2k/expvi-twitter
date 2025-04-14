@@ -165,7 +165,7 @@ If different than the generated base path, during app bootstrap, you can provide
 import { BASE_PATH } from '';
 
 bootstrap(AppComponent, [
-    { provide: BASE_PATH, useValue: 'http://127.0.0.1:8000/api' },
+    { provide: BASE_PATH, useValue: 'https://your-web-service.com' },
 ]);
 ```
 
@@ -177,7 +177,7 @@ import { BASE_PATH } from '';
 @NgModule({
     imports: [],
     declarations: [ AppComponent ],
-    providers: [ provide: BASE_PATH, useValue: 'http://127.0.0.1:8000/api' ],
+    providers: [ provide: BASE_PATH, useValue: 'https://your-web-service.com' ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule {}

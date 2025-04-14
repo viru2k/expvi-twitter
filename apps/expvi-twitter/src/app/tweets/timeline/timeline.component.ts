@@ -1,33 +1,37 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { TweetComponent } from '../tweet/tweet.component';
+import { TimelineStore } from './../../store/timeline/timeline.store';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { PostCardComponent } from '../post-card/post-card.component';
+
 
 @Component({
-  standalone: true,
   selector: 'app-timeline',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    InputTextModule,
-    ButtonModule,
-    TweetComponent
-  ],
-
+  standalone: true,
+  imports: [CommonModule, NgFor, NgIf, AsyncPipe, PostCardComponent],
   templateUrl: './timeline.component.html',
-  styleUrl: './timeline.component.scss',
+  styleUrls: ['./timeline.component.scss']
 })
-export class TimelineComponent implements OnInit {
-  public tweets: any[] = [];
+export class TimelineComponent implements OnInit, AfterViewInit {
+  private timelineStore = inject(TimelineStore);
+
+  posts$ = this.timelineStore.posts$;
+  isLoading$ = this.timelineStore.isLoading$;
+
+  @ViewChild('scrollAnchor', { static: false }) scrollAnchor!: ElementRef;
+
   ngOnInit(): void {
-    this.tweets = [
-      { id: 1, text: 'tweet 1' },
-      { id: 2, text: 'tweet 2' },
-      { id: 3, text: 'tweet 3' }
-    ]
+    this.timelineStore.loadTimeline();
+    this.timelineStore.startPolling();
+  }
+
+  ngAfterViewInit(): void {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        this.timelineStore.loadMore();
+      }
+    });
+
+    observer.observe(this.scrollAnchor.nativeElement);
   }
 }
-

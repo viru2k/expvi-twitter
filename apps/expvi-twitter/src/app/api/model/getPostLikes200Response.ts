@@ -7,16 +7,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { User } from './user';
 
 
-export interface LoginUserRequest { 
-    /**
-     * The email of the user.
-     */
-    email: string;
-    /**
-     * The password for the user
-     */
-    password: string;
+export interface GetPostLikes200Response { 
+    data?: Array<User>;
 }
 

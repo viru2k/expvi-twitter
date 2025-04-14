@@ -9,14 +9,12 @@
  */
 
 
-export interface LoginUserRequest { 
-    /**
-     * The email of the user.
-     */
-    email: string;
-    /**
-     * The password for the user
-     */
-    password: string;
+export interface Comment { 
+    id?: number;
+    user_id?: number;
+    post_id?: number;
+    text?: string;
+    created_at?: string;
+    updated_at?: string;
 }
 

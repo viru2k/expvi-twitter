@@ -1,0 +1,36 @@
+<div class="post">
+  <div class="user">
+    <img
+      *ngIf="post.user?.avatar_url"
+      [src]="post.user?.avatar_url"
+      alt="Avatar"
+      class="avatar"
+    />
+    <span class="username">{{ post.user?.name || 'Usuario anónimo' }}</span>
+  </div>
+
+  <div class="content">
+    <p *ngIf="post.content?.text">{{ post.content?.text }}</p>
+
+    <ng-container *ngIf="post.content?.type === 'picture'">
+      <img
+        [src]="post.content?.text"
+        class="media"
+        alt="Imagen del post"
+      />
+    </ng-container>
+
+    <ng-container *ngIf="post.content?.type === 'video'">
+      <video
+      [src]="post.content?.text"
+        class="media"
+        controls
+      ></video>
+    </ng-container>
+  </div>
+
+  <div class="meta">
+  {{ post.like_count ?? 0 }}
+    {{ post.created_at | date:'short' }}
+  </div>
+</div>
