@@ -1,4 +1,4 @@
-{
+/* {
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
@@ -14,7 +14,44 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+          "@api": ["apps/expvi-twitter/src/app/api/index.ts"],
+          "@service": ["apps/expvi-twitter/src/app/api/service/index.ts"],
+          "@model": ["apps/expvi-twitter/src/app/api/model/index.ts"],
+          "@store": ["apps/expvi-twitter/src/app/core/stores/index.ts"]
+        }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
+ */
+
+ {
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@api": ["apps/expvi-twitter/src/app/api/index.ts"],
+      "@service": ["apps/expvi-twitter/src/app/api/services.ts"],
+      "@model": ["apps/expvi-twitter/src/app/api/model/index.ts"],
+      "@store": ["apps/expvi-twitter/src/app/core/stores/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

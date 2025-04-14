@@ -1,1501 +1,351 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "title": "Expivi Twitter API",
-        "version": "1.0.0"
-    },
-    "servers": [
-        {
-            "url": "http://localhost:8000/api",
-            "description": "The Expivi Twitter API"
-        }
-    ],
-    "paths": {
-        "/auth/register": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "description": "Register a new user",
-                "operationId": "08136088c4862c313b35d6518bab8d3a",
-                "requestBody": {
-                    "$ref": "#/components/requestBodies/RegistrationRequest"
-                },
-                "responses": {
-                    "201": {
-                        "description": "The user was registered",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/TokenResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "The post body was invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/login": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "description": "Log in as a user",
-                "operationId": "99d66635c4992aeaa6aa44ff653d0563",
-                "requestBody": {
-                    "$ref": "#/components/requestBodies/LoginRequest"
-                },
-                "responses": {
-                    "201": {
-                        "description": "The user was logged in",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/TokenResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "The post body was invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/comments/{id}/user": {
-            "get": {
-                "tags": [
-                    "Comments"
-                ],
-                "description": "Get the user of a comment",
-                "operationId": "f96edb08c6f7830e1850cde4c5b920bc",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "The user who made the comment",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/User"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/comments/{id}": {
-            "delete": {
-                "tags": [
-                    "Comments"
-                ],
-                "description": "Delete a comment",
-                "operationId": "f614986a52312afe458ea011e848c47c",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "The comment was deleted"
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "This action is forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ForbiddenResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/posts": {
-            "get": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "List all posts in pages of 12 items",
-                "operationId": "cce7863441436fd49dc474491f658292",
-                "parameters": [
-                    {
-                        "name": "cursor",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "A page of posts",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Post"
-                                            }
-                                        },
-                                        "path": {
-                                            "description": "The URL to the current page",
-                                            "type": "string"
-                                        },
-                                        "next_cursor": {
-                                            "description": "The cursor for the next page",
-                                            "type": "string"
-                                        },
-                                        "next_page_url": {
-                                            "description": "The URL to the next page.",
-                                            "type": "string"
-                                        },
-                                        "prev_cursor": {
-                                            "description": "The cursor for the previous page",
-                                            "type": "string"
-                                        },
-                                        "prev_page_url": {
-                                            "description": "The URL to the previous page",
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "Create a new post",
-                "operationId": "ccc642d639ab35e23161fa8d2f37a9a3",
-                "requestBody": {
-                    "$ref": "#/components/requestBodies/PostCreateRequest"
-                },
-                "responses": {
-                    "201": {
-                        "description": "The newly created post",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/Post"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "The post body was invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/posts/poll": {
-            "get": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "Check for new posts",
-                "operationId": "383098504fbc54f89f2165fe512da03c",
-                "parameters": [
-                    {
-                        "name": "since",
-                        "in": "query",
-                        "description": "A POSIX timestamp from the last moment data was polled",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The newly created posts",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Post"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "The timestamp was older than one minute",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/posts/{id}": {
-            "get": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "Get a post",
-                "operationId": "6b9af649206ee145dfc5584522c37327",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The post",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/Post"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "Delete a post",
-                "operationId": "6f8f9a3757a021f020b31f8bd153c021",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "The post was deleted"
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "This action is forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ForbiddenResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/posts/{id}/user": {
-            "get": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "Get the user of a post",
-                "operationId": "1b6008a78e66ebbbb7a959cf4b614c5e",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "The user who made the post",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/User"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/posts/{id}/likes": {
-            "get": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "Get the users who liked the post",
-                "operationId": "b43c615b6698b2f011a40a722089ad16",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The users who liked the post",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/User"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "Like the post",
-                "operationId": "cda18be578faea3f1b769e487a5f9a92",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "The post was liked"
-                    },
-                    "400": {
-                        "description": "The post was already liked",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "Remove the like on the post",
-                "operationId": "448633fd8a928fd1508d9e6ee74322c7",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "The post was unliked"
-                    },
-                    "400": {
-                        "description": "The post was not liked",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/posts/{id}/comments": {
-            "get": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "Get the comments for the post",
-                "operationId": "bd0379a97b4057f7d5a720a565e8bf19",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The comments",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Comment"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Posts"
-                ],
-                "description": "Create a new comment for the post",
-                "operationId": "fae30daa3987c576d9dd4709119d26da",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "$ref": "#/components/requestBodies/CommentCreateRequest"
-                },
-                "responses": {
-                    "201": {
-                        "description": "The newly created comment",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/Comment"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "The post body was invalid",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/users/{id}": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "description": "Get a user",
-                "operationId": "6946bbab7898f59a09e3c8e529a38907",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "id or \"me\"",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/User"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/users/{id}/posts": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "description": "Get a user's posts",
-                "operationId": "86818d33ca62de84348b16e4653636f7",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "id or \"me\"",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The user's posts",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Post"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/users/{id}/likes": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "description": "Get a user's liked posts",
-                "operationId": "8a014c3fe66929fe2510886732473cec",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "id or \"me\"",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The user's liked posts",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Post"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        },
-        "/users/{id}/comments": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "description": "Get a user's comments",
-                "operationId": "d1b8dfdbeb145eb22cdcc439d2a6e469",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "id or \"me\"",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The user's comments",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/Comment"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "The request was unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
-            }
-        }
-    },
-    "components": {
-        "schemas": {
-            "ErrorResponse": {
-                "description": "An error occurred with the request",
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "exception": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "UnauthorizedResponse": {
-                "description": "The user was unauthenticated",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Unauthenticated"
-                    }
-                },
-                "type": "object"
-            },
-            "ForbiddenResponse": {
-                "description": "This action is unauthorized",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Forbidden"
-                    },
-                    "exception": {
-                        "type": "string",
-                        "example": "AccessDeniedHttpException"
-                    }
-                },
-                "type": "object"
-            },
-            "NotFoundResponse": {
-                "description": "The resource was not found",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "Model not found"
-                    },
-                    "exception": {
-                        "type": "string",
-                        "example": "NotFoundHttpException"
-                    }
-                },
-                "type": "object"
-            },
-            "ValidationErrorResponse": {
-                "description": "The post data was in invalid format",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "example": "The text field is required"
-                    },
-                    "errors": {
-                        "properties": {
-                            "string": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/validationErrorsArrayItem"
-                                }
-                            }
-                        },
-                        "type": "object"
-                    }
-                },
-                "type": "object"
-            },
-            "validationErrorsArrayItem": {
-                "type": "string",
-                "example": "The text field is required."
-            },
-            "TokenResponse": {
-                "description": "The API token for the user",
-                "properties": {
-                    "data": {
-                        "properties": {
-                            "token": {
-                                "type": "string"
-                            }
-                        },
-                        "type": "object"
-                    }
-                },
-                "type": "object"
-            },
-            "Comment": {
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "user_id": {
-                        "type": "integer"
-                    },
-                    "post_id": {
-                        "type": "integer"
-                    },
-                    "text": {
-                        "type": "string"
-                    },
-                    "created_at": {
-                        "type": "string"
-                    },
-                    "updated_at": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "PicturePost": {
-                "properties": {
-                    "type": {
-                        "type": "string",
-                        "enum": [
-                            "picture"
-                        ]
-                    },
-                    "text": {
-                        "type": "string"
-                    },
-                    "picture_url": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "Post": {
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "user_id": {
-                        "type": "integer"
-                    },
-                    "like_count": {
-                        "type": "integer"
-                    },
-                    "created_at": {
-                        "type": "string"
-                    },
-                    "updated_at": {
-                        "type": "string"
-                    },
-                    "content": {
-                        "oneOf": [
-                            {
-                                "$ref": "#/components/schemas/PicturePost"
-                            },
-                            {
-                                "$ref": "#/components/schemas/VideoPost"
-                            },
-                            {
-                                "$ref": "#/components/schemas/TextPost"
-                            }
-                        ]
-                    }
-                },
-                "type": "object"
-            },
-            "TextPost": {
-                "properties": {
-                    "type": {
-                        "type": "string",
-                        "enum": [
-                            "text"
-                        ]
-                    },
-                    "text": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "User": {
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "avatar_url": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "created_at": {
-                        "type": "string"
-                    },
-                    "updated_at": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "VideoPost": {
-                "properties": {
-                    "type": {
-                        "type": "string",
-                        "enum": [
-                            "video"
-                        ]
-                    },
-                    "text": {
-                        "type": "string"
-                    },
-                    "video_url": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            }
-        },
-        "requestBodies": {
-            "LoginRequest": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "required": [
-                                "email",
-                                "password"
-                            ],
-                            "properties": {
-                                "email": {
-                                    "description": "The email of the user.",
-                                    "type": "string"
-                                },
-                                "password": {
-                                    "description": "The password for the user",
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
-            },
-            "RegistrationRequest": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "required": [
-                                "name",
-                                "email",
-                                "password"
-                            ],
-                            "properties": {
-                                "name": {
-                                    "description": "The user's name.",
-                                    "type": "string"
-                                },
-                                "avatar_url": {
-                                    "description": "The url to the user's avatar.",
-                                    "type": "string"
-                                },
-                                "email": {
-                                    "description": "The email of the user.",
-                                    "type": "string"
-                                },
-                                "password": {
-                                    "description": "The password for the user",
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
-            },
-            "CommentCreateRequest": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "required": [
-                                "text"
-                            ],
-                            "properties": {
-                                "text": {
-                                    "description": "The content of the comment",
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
-            },
-            "PostCreateRequest": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "required": [
-                                "type",
-                                "text"
-                            ],
-                            "properties": {
-                                "type": {
-                                    "description": "The type of the comment",
-                                    "type": "string",
-                                    "enum": [
-                                        "text",
-                                        "video",
-                                        "picture"
-                                    ]
-                                },
-                                "text": {
-                                    "description": "The content of the comment",
-                                    "type": "string"
-                                },
-                                "video_url": {
-                                    "description": "The url to the video; if post is of type video",
-                                    "type": "string"
-                                },
-                                "picture_url": {
-                                    "description": "The url to the picture; if post is of type picture",
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
-            }
-        },
-        "securitySchemes": {
-            "apiAuth": {
-                "type": "http",
-                "scheme": "bearer"
-            }
-        }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Expivi Twitter API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api",
+      "description": "The Expivi Twitter API"
     }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Register a new user",
+        "operationId": "registerUser",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RegistrationRequest"
+        },
+        "responses": {
+          "201": {
+            "description": "The user was registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The post body was invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Log in as a user",
+        "operationId": "loginUser",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/LoginRequest"
+        },
+        "responses": {
+          "201": {
+            "description": "The user was logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The request was unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The post body was invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/{id}/user": {
+      "get": {
+        "tags": ["Comments"],
+        "description": "Get the user of a comment",
+        "operationId": "getCommentUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The user who made the comment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The request was unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiAuth": []
+          }
+        ]
+      }
+    },
+    "/comments/{id}": {
+      "delete": {
+        "tags": ["Comments"],
+        "description": "Delete a comment",
+        "operationId": "deleteCommentById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The comment was deleted"
+          },
+          "401": {
+            "description": "The request was unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "This action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TokenResponse": {
+        "description": "The API token for the user",
+        "properties": {
+          "data": {
+            "properties": {
+              "token": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "UnauthorizedResponse": {
+        "description": "The user was unauthenticated",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Unauthenticated"
+          }
+        },
+        "type": "object"
+      },
+      "ValidationErrorResponse": {
+        "description": "The post data was in invalid format",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "The text field is required"
+          },
+          "errors": {
+            "properties": {
+              "string": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "ForbiddenResponse": {
+        "description": "This action is unauthorized",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "exception": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "NotFoundResponse": {
+        "description": "The resource was not found",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "exception": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "User": {
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "avatar_url": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    },
+    "requestBodies": {
+      "LoginRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": ["email", "password"],
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        }
+      },
+      "RegistrationRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": ["name", "email", "password"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "avatar_url": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "apiAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
 }

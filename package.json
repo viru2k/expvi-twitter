@@ -7,7 +7,9 @@
     "start": "nx serve",
     "build": "nx build",
     "lint": "nx lint",
-    "test": "nx test"
+    "test": "nx test",
+     "openapi:generate": "openapi-generator-cli generate -i data-2025413223217.json -g typescript-angular -o apps/expvi-twitter/src/app/api"
+
   },
   "dependencies": {
     "@angular/common": "~19.2.0",
