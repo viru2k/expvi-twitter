@@ -1,0 +1,5 @@
+{
+    "input": "./data-2025413223217.json",
+    "output": "apps/expvi-twitter/src/app/api",
+    "ignoreUnusedModels": false
+  }
