@@ -1,0 +1,49 @@
+<p-dialog header="Crear nuevo post" [(visible)]="visible" [modal]="true" [style]="{ width: '400px' }">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-column gap-3">
+    <textarea
+      pInputTextarea
+      rows="3"
+      formControlName="text"
+      placeholder="¿Qué estás pensando?"
+    ></textarea>
+
+    <div class="flex gap-2">
+      <button
+        pButton
+        type="button"
+        [class]="form.value.type === 'text' ? 'p-button-sm p-button-primary' : 'p-button-sm'"
+        (click)="form.patchValue({ type: 'text' })"
+      >Texto</button>
+
+      <button
+        pButton
+        type=""
+        [class]="form.value.type === 'picture' ? 'p-button-sm p-button-primary' : 'p-button-sm'"
+        (click)="form.patchValue({ type: 'picture' })"
+      >Imagen</button>
+
+      <button
+        pButton
+        type="button"
+        [class]="form.value.type === 'video' ? 'p-button-sm p-button-primary' : 'p-button-sm'"
+        (click)="form.patchValue({ type: 'video' })"
+      >Video</button>
+    </div>
+
+    <input
+      *ngIf="form.value.type === 'picture'"
+      pInputText
+      placeholder="URL de la imagen"
+      formControlName="picture_url"
+    />
+
+    <input
+      *ngIf="form.value.type === 'video'"
+      pInputText
+      placeholder="URL del video"
+      formControlName="video_url"
+    />
+
+    <button pButton type="submit"  [disabled]="form.invalid"> Publicar</button>
+  </form>
+</p-dialog>

@@ -1,4 +1,5 @@
 <div class="post">
+  <!-- Usuario -->
   <div class="user">
     <img
       *ngIf="post.user?.avatar_url"
@@ -9,28 +10,53 @@
     <span class="username">{{ post.user?.name || 'Usuario anónimo' }}</span>
   </div>
 
+  <!-- Contenido del post -->
   <div class="content">
     <p *ngIf="post.content?.text">{{ post.content?.text }}</p>
 
-    <ng-container *ngIf="post.content?.type === 'picture'">
+    <ng-container *ngIf="post.content && isPicture(post.content)">
       <img
-        [src]="post.content?.text"
+        [src]="post.content.picture_url"
         class="media"
         alt="Imagen del post"
       />
     </ng-container>
 
-    <ng-container *ngIf="post.content?.type === 'video'">
+    <ng-container *ngIf="post.content && isVideo(post.content)">
       <video
-      [src]="post.content?.text"
+        [src]="post.content.video_url"
         class="media"
         controls
       ></video>
     </ng-container>
   </div>
 
+  <!-- Likes y Fecha -->
   <div class="meta">
-  {{ post.like_count ?? 0 }}
-    {{ post.created_at | date:'short' }}
+    ❤️ {{ post.like_count ?? 0 }}
+    • {{ post.created_at | date:'short' }}
+
+    <button
+      pButton
+      icon="pi pi-thumbs-up"
+      class="p-button-sm p-button-text"
+      (click)="like(post.id!)"
+      aria-label="i like"
+    ></button>
+  </div>
+
+  <!-- Comentarios -->
+  <div class="comments">
+    <button
+      pButton
+
+      class="p-button-sm p-button-text"
+      (click)="toggleComments(post.id!)"
+      aria-label="comment"
+    >+</button>
+
+    <div *ngIf="openedComments.includes(post.id!)">
+      <app-comments [postId]="post.id ?? 0"></app-comments>
+    </div>
   </div>
 </div>

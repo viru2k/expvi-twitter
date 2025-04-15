@@ -3,17 +3,18 @@ import { CommonModule } from '@angular/common';
 import { TimelineStore } from './../../store/timeline/timeline.store';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { PostCardComponent } from '../post-card/post-card.component';
+import { CreatePostComponent } from '../create-post/create-post.component';
 
 
 @Component({
   selector: 'app-timeline',
   standalone: true,
-  imports: [CommonModule, NgFor, NgIf, AsyncPipe, PostCardComponent],
+  imports: [CommonModule, NgFor, NgIf, AsyncPipe, PostCardComponent, CreatePostComponent],
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss']
 })
 export class TimelineComponent implements OnInit, AfterViewInit {
-  private timelineStore = inject(TimelineStore);
+  public  timelineStore = inject(TimelineStore);
 
   posts$ = this.timelineStore.posts$;
   isLoading$ = this.timelineStore.isLoading$;

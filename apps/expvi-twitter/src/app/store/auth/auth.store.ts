@@ -1,5 +1,7 @@
 import { RegisterUserRequest } from './../../api/model/registerUserRequest';
 import { LoginUserRequest } from './../../api/model/loginUserRequest';
+import { Store } from '@ngrx/store';
+import { linkToGlobalState } from './../component-state.reducer';
 import { AuthService } from './../../api/api/auth.service';
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
@@ -24,9 +26,10 @@ export class AuthStore extends ComponentStore<AuthState> {
   private authService = inject(AuthService);
   private localStorage= inject(LocalStorageService);
   private router =inject(Router);
-  constructor(
+  constructor( private globalStore: Store
   ) {
-    super(DEFAULT_STATE);
+       super(DEFAULT_STATE);
+       linkToGlobalState(this.state$, 'AuthStore', this.globalStore);
     const token = this.localStorage.getToken();
     if (token) {
       this.patchState({ token });

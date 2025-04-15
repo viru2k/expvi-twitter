@@ -1,9 +1,12 @@
+import { Comment } from './../../api/model/comment';
 
 import { User } from './../../api/model/user';
 import { Post } from './../../api/model/post';
 import { Injectable } from '@angular/core';
 import { PostsService } from './..//../api/api/posts.service';
 import { ComponentStore } from '@ngrx/component-store';
+import { Store } from '@ngrx/store';
+import { linkToGlobalState } from './../component-state.reducer';
  // Wrapper del API
 
 import { tap, switchMap, catchError, EMPTY, interval, withLatestFrom, map, forkJoin } from 'rxjs';
@@ -15,19 +18,22 @@ export interface TimelineState {
   nextCursor?: string;
   searchTerm: string;
   lastPollTs?: number;
+  commentsByPostId: Record<number, Comment[]>;
 }
 
 const DEFAULT_STATE: TimelineState = {
   posts: [],
   isLoading: false,
   isPolling: false,
-  searchTerm: ''
+  searchTerm: '',
+  commentsByPostId: {}
 };
 
 @Injectable({ providedIn: 'root' })
 export class TimelineStore extends ComponentStore<TimelineState> {
-  constructor(private postService: PostsService) {
+  constructor(private postService: PostsService,   private globalStore: Store) {
     super(DEFAULT_STATE);
+    linkToGlobalState(this.state$, 'TimelineStore', this.globalStore);
   }
 
   readonly posts$ = this.select((s) => s.posts);
@@ -69,53 +75,43 @@ export class TimelineStore extends ComponentStore<TimelineState> {
     lastPollTs: timestamp
   }));
 
-/*   // Initial load or search
-  readonly loadTimeline = this.effect((trigger$) =>
-    trigger$.pipe(
-      tap(() => this.setLoading(true)),
-      switchMap(() =>
-        this.postService.listPosts().pipe( // sin argumentos
-          tap((res) => {
-            this.setPosts(res?.data ?? []);
-            this.setNextCursor(res?.next_cursor);
-            this.setLastPollTs(Date.now());
-          }),
-          catchError(() => EMPTY),
-          tap(() => this.setLoading(false))
-        )
-      )
-    )
-  ); */
+  readonly setCommentsForPost = this.updater((state, { postId, comments }: { postId: number; comments: Comment[] }) => ({
+    ...state,
+    commentsByPostId: {
+      ...state.commentsByPostId,
+      [postId]: comments
+    }
+  }));
 
-  readonly loadTimeline = this.effect((trigger$) =>
-    trigger$.pipe(
-      tap(() => this.setLoading(true)),
-      switchMap(() =>
-        this.postService.listPosts().pipe(
-          switchMap((res) =>
-            forkJoin(
-              (res.data ?? [])
-                .filter((post) => post.id !== undefined)
-                .map((post) =>
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  this.postService.getPostUser(post.id!).pipe(
-                    map((user) => ({ ...post, user: user.data }))
-                  )
-                )
+
+  readonly selectCommentsByPostId = (postId: number) =>
+    this.select((s) => s.commentsByPostId[postId] ?? []);
+
+
+  readonly loadTimeline = this.effect<void>((trigger$) =>
+  trigger$.pipe(
+    tap(() => this.setLoading(true)),
+    switchMap(() =>
+      this.postService.listPosts().pipe(
+        switchMap((res) =>
+          forkJoin(
+            (res.data ?? []).map((post) =>
+              this.postService.getPostUser(post.id!).pipe(
+                map((userRes) => ({ ...post, user: userRes.data }))
+              )
             )
-          ),
-
-          tap((enrichedPosts) => {
-            this.setPosts(enrichedPosts);
-            this.setLastPollTs(Date.now());
-          }),
-          catchError(() => EMPTY),
-          tap(() => this.setLoading(false))
-        )
+          )
+        ),
+        tap((posts) => this.setPosts(posts)),
+        catchError((err) => {
+          console.error(err);
+          return EMPTY;
+        }),
+        tap(() => this.setLoading(false))
       )
     )
-  );
-
+  )
+);
 
   // 🔁 Scroll infinit
   readonly loadMore = this.effect(() =>
@@ -136,7 +132,7 @@ export class TimelineStore extends ComponentStore<TimelineState> {
 
 
   readonly startPolling = this.effect(() =>
-    interval(10000).pipe(
+    interval(30000).pipe(
       withLatestFrom(this.select((s) => s.lastPollTs)),
       switchMap(([_, since]) =>
         since
@@ -153,4 +149,48 @@ export class TimelineStore extends ComponentStore<TimelineState> {
       )
     )
   );
+
+  readonly likePost = this.effect<number>((postId$) =>
+    postId$.pipe(
+      switchMap((postId) =>
+        this.postService.likePost(postId).pipe(
+          tap(() => this.loadTimeline()), // o actualizar solo el post si prefieres
+          catchError((err) => {
+            console.error('Error al dar like', err);
+            return EMPTY;
+          })
+        )
+      )
+    )
+  );
+
+  readonly loadComments = this.effect<number>((postId$) =>
+    postId$.pipe(
+      switchMap((postId) =>
+        this.postService.getPostComments(postId).pipe(
+          tap({
+            next: (res) => this.setCommentsForPost({ postId, comments: res.data ?? [] }),
+            error: (err) => console.error('Error al obtener comentarios', err)
+          }),
+          catchError(() => EMPTY)
+        )
+      )
+    )
+  );
+
+  readonly addComment = this.effect<{ postId: number; text: string }>((params$) =>
+    params$.pipe(
+      switchMap(({ postId, text }) =>
+        this.postService.createPostComment(postId, { text }).pipe(
+          tap(() => this.loadComments(postId)), // Recarga después de crear
+          catchError((err) => {
+            console.error('Error al crear comentario', err);
+            return EMPTY;
+          })
+        )
+      )
+    )
+  );
+
+
 }

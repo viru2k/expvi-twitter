@@ -1,0 +1,15 @@
+<div class="comments-list">
+  <div *ngFor="let comment of comments$ | async">
+    <strong>{{ comment.user_id }}</strong>: {{ comment.text }}
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="comment-form">
+  <input
+    pInputText
+    type="text"
+    formControlName="text"
+    placeholder="Escribe un comentario..."
+  />
+  <button pButton type="submit" label="Comentar" [disabled]="form.invalid" aria-label="comment"></button>
+</form>

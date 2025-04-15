@@ -16,7 +16,7 @@ export class LocalStorageService {
   }
 
   clearToken(): void {
-    localStorage.removeItem(TOKEN_KEY);
+  //  localStorage.removeItem(TOKEN_KEY);
   }
 
   isLoggedIn(): boolean {

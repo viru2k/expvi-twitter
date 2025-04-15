@@ -4,3 +4,14 @@
   <div *ngIf="isLoading$ | async" class="loading">Loading...</div>
 
 </div>
+<!-- Modal de creación -->
+<app-create-post #postModal (postCreated)="timelineStore.loadTimeline()" />
+
+<!-- Botón flotante -->
+<button
+  pButton
+  icon="pi pi-plus"
+  class="floating-button"
+  (click)="postModal.open()"
+  aria-label="Crear nuevo post"
+></button>

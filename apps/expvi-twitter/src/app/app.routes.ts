@@ -19,7 +19,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'tweets',
-   // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import('./tweets/timeline/timeline.component').then((m) => m.TimelineComponent)
   },
