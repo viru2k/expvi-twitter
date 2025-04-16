@@ -2,6 +2,7 @@ import { Comment } from './../../api/model/comment';
 
 import { User } from './../../api/model/user';
 import { Post } from './../../api/model/post';
+
 import { Injectable } from '@angular/core';
 import { PostsService } from './..//../api/api/posts.service';
 import { ComponentStore } from '@ngrx/component-store';
@@ -10,9 +11,11 @@ import { linkToGlobalState } from './../component-state.reducer';
  // Wrapper del API
 
 import { tap, switchMap, catchError, EMPTY, interval, withLatestFrom, map, forkJoin } from 'rxjs';
+import { PostWithExtras } from '../models/post-with-extras.model';
 
 export interface TimelineState {
   posts: Array<Post & { user?: User }>;
+  selectedPost?: PostWithExtras;
   isLoading: boolean;
   isPolling: boolean;
   nextCursor?: string;
@@ -22,7 +25,9 @@ export interface TimelineState {
 }
 
 const DEFAULT_STATE: TimelineState = {
+
   posts: [],
+  selectedPost:{},
   isLoading: false,
   isPolling: false,
   searchTerm: '',
@@ -37,6 +42,7 @@ export class TimelineStore extends ComponentStore<TimelineState> {
   }
 
   readonly posts$ = this.select((s) => s.posts);
+  readonly selectedPost$ = this.select((state) => state.selectedPost);
   readonly isLoading$ = this.select((s) => s.isLoading);
   readonly searchTerm$ = this.select((s) => s.searchTerm);
 
@@ -49,7 +55,10 @@ export class TimelineStore extends ComponentStore<TimelineState> {
     ...state,
     posts: [...state.posts, ...newPosts]
   }));
-
+  readonly setSelectedPost = this.updater((state, post: PostWithExtras) => ({
+    ...state,
+    selectedPost: post
+  }));
   readonly prependPosts = this.updater((state, newPosts: Post[]) => ({
     ...state,
     posts: [...newPosts, ...state.posts]
@@ -89,29 +98,54 @@ export class TimelineStore extends ComponentStore<TimelineState> {
 
 
   readonly loadTimeline = this.effect<void>((trigger$) =>
-  trigger$.pipe(
-    tap(() => this.setLoading(true)),
-    switchMap(() =>
-      this.postService.listPosts().pipe(
-        switchMap((res) =>
-          forkJoin(
-            (res.data ?? []).map((post) =>
-              this.postService.getPostUser(post.id!).pipe(
-                map((userRes) => ({ ...post, user: userRes.data }))
-              )
-            )
-          )
-        ),
-        tap((posts) => this.setPosts(posts)),
-        catchError((err) => {
-          console.error(err);
-          return EMPTY;
-        }),
-        tap(() => this.setLoading(false))
+    trigger$.pipe(
+      tap(() => this.setLoading(true)),
+      switchMap(() =>
+        this.postService.listPosts().pipe(
+          tap((res) => {
+            this.setPosts(res.data ?? []);
+            this.setLastPollTs(Date.now());
+          }),
+          catchError((err) => {
+            console.error('Error en loadTimeline', err);
+            return EMPTY;
+          }),
+          tap(() => this.setLoading(false))
+        )
       )
     )
-  )
-);
+  );
+
+
+  readonly loadPostById = this.effect<number>((postId$) =>
+    postId$.pipe(
+      switchMap((postId) =>
+        this.postService.getPostById(postId).pipe(
+          switchMap((postRes) =>
+            this.postService.getPostUser(postId).pipe(
+              switchMap((userRes) =>
+                this.postService.getPostComments(postId).pipe(
+                  map((commentsRes) => ({
+                    ...postRes.data,
+                    user: userRes.data,
+                    comments: commentsRes.data ?? []
+                  }))
+                )
+              )
+            )
+          ),
+          tap((enrichedPost) => this.setSelectedPost(enrichedPost)),
+          catchError((err) => {
+            console.error('Error al cargar post por id', err);
+            return EMPTY;
+          })
+        )
+      )
+    )
+  );
+
+
+
 
   // 🔁 Scroll infinit
   readonly loadMore = this.effect(() =>
@@ -122,6 +156,7 @@ export class TimelineStore extends ComponentStore<TimelineState> {
               tap((res) => {
                 this.appendPosts(res.data || []);
                 this.setNextCursor(res.next_cursor);
+
               }),
               catchError(() => EMPTY)
             )
@@ -154,7 +189,7 @@ export class TimelineStore extends ComponentStore<TimelineState> {
     postId$.pipe(
       switchMap((postId) =>
         this.postService.likePost(postId).pipe(
-          tap(() => this.loadTimeline()), // o actualizar solo el post si prefieres
+          tap(() => this.loadTimeline()), // ✅ recarga completa al dar like
           catchError((err) => {
             console.error('Error al dar like', err);
             return EMPTY;
@@ -163,6 +198,7 @@ export class TimelineStore extends ComponentStore<TimelineState> {
       )
     )
   );
+
 
   readonly loadComments = this.effect<number>((postId$) =>
     postId$.pipe(
@@ -178,6 +214,7 @@ export class TimelineStore extends ComponentStore<TimelineState> {
     )
   );
 
+
   readonly addComment = this.effect<{ postId: number; text: string }>((params$) =>
     params$.pipe(
       switchMap(({ postId, text }) =>
@@ -191,6 +228,23 @@ export class TimelineStore extends ComponentStore<TimelineState> {
       )
     )
   );
+
+  readonly deletePost = this.effect<number>((postId$) =>
+    postId$.pipe(
+      switchMap((postId) =>
+        this.postService.deletePostById(postId).pipe(
+          tap(() => {
+            this.loadTimeline(); // recarga los posts si estás en timeline
+          }),
+          catchError((err) => {
+            console.error('Error al eliminar el post', err);
+            return EMPTY;
+          })
+        )
+      )
+    )
+  );
+
 
 
 }
