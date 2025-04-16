@@ -1,7 +1,18 @@
-<div class="comments-list">
-  <div *ngFor="let comment of comments$ | async">
-    <strong>{{ comment.user_id }}</strong>: {{ comment.text }}
+<div *ngFor="let comment of comments$ | async">
+  <div style="padding: 10px;">
+    <p-card >
+
+      <p-scrollpanel [style]="{ width: '100%', height: '75px' }">
+        <p>
+          {{ comment.text }}
+      </p>
+      </p-scrollpanel>
+
+      <p-divider />
+
+  </p-card>
   </div>
+
 </div>
 
 <form [formGroup]="form" (ngSubmit)="submit()" class="comment-form">
@@ -11,5 +22,5 @@
     formControlName="text"
     placeholder="Escribe un comentario..."
   />
-  <button pButton type="submit" label="Comentar" [disabled]="form.invalid" aria-label="comment"></button>
+  <p-button type="submit" label="Comentar" [disabled]="form.invalid" aria-label="comment" severity="success"></p-button>
 </form>

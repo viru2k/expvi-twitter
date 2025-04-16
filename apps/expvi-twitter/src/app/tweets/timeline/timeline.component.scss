@@ -1,7 +1,16 @@
 .timeline {
-  padding: 1.5rem;
-  max-width: 600px;
-  margin: 0 auto;
+  padding: 1rem;
+
+  .post-wrapper {
+    padding: 1rem;
+    display: flex;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 1rem;
+    font-style: italic;
+  }
 }
 
 .post {

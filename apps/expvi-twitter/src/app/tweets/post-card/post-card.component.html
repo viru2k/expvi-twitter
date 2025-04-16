@@ -1,4 +1,7 @@
-<div class="post">
+
+  <p-card  (click)="goToDetails(post.id!)">
+
+
   <!-- Usuario -->
   <div class="user">
     <img
@@ -31,32 +34,5 @@
     </ng-container>
   </div>
 
-  <!-- Likes y Fecha -->
-  <div class="meta">
-    ❤️ {{ post.like_count ?? 0 }}
-    • {{ post.created_at | date:'short' }}
 
-    <button
-      pButton
-      icon="pi pi-thumbs-up"
-      class="p-button-sm p-button-text"
-      (click)="like(post.id!)"
-      aria-label="i like"
-    ></button>
-  </div>
-
-  <!-- Comentarios -->
-  <div class="comments">
-    <button
-      pButton
-      icon="pi pi-comment"
-      class="p-button-sm p-button-text"
-      (click)="toggleComments(post.id!)"
-      aria-label="comment"
-    ></button>
-
-    <div *ngIf="openedComments.includes(post.id!)">
-      <app-comments [postId]="post.id ?? 0"></app-comments>
-    </div>
-  </div>
-</div>
+</p-card>

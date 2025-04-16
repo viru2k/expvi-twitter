@@ -1,0 +1,44 @@
+<!-- Likes y Fecha -->
+<div class="user-info mb-4 flex items-center gap-3">
+  <img
+    *ngIf="selectedPost?.user?.avatar_url"
+    [src]="selectedPost?.user?.avatar_url"
+    class="avatar"
+    alt="Avatar"
+    width="48"
+    height="48"
+  />
+  <div>
+    <strong>User: {{ selectedPost?.user?.name }}</strong>
+    <p class="text-sm text-gray-500">Email: {{ selectedPost?.user?.email }}</p>
+  </div>
+</div>
+<div class="meta mt-3 flex items-center gap-3 text-sm">
+  ❤️ {{ selectedPost?.like_count ?? 0 }} •
+  {{ selectedPost?.created_at | date: 'short' }}
+
+  <p-button
+    icon="pi pi-thumbs-up"
+    class="p-button-sm p-button-text"
+    (click)="timelineStore.likePost(selectedPost?.id!)"
+    severity="info"
+    aria-label="Me gusta"
+  ></p-button>
+
+  <p-button
+  *ngIf="selectedPost?.user_id === selectedPost?.user_id"
+    icon="pi pi-trash"
+    label="Eliminar"
+    severity="danger"
+    (click)="deletePost(selectedPost?.id!)"
+  ></p-button>
+</div>
+
+<!-- Comentarios -->
+<div class="comments mt-4">
+
+
+  <div style="padding: 10px;">
+    <app-comments [postId]="selectedPost?.id ?? 0"></app-comments>
+  </div>
+</div>

@@ -4,12 +4,13 @@ import { TimelineStore } from './../../store/timeline/timeline.store';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { PostCardComponent } from '../post-card/post-card.component';
 import { CreatePostComponent } from '../create-post/create-post.component';
+import { ButtonModule } from 'primeng/button';
 
 
 @Component({
   selector: 'app-timeline',
   standalone: true,
-  imports: [CommonModule, NgFor, NgIf, AsyncPipe, PostCardComponent, CreatePostComponent],
+  imports: [CommonModule, ButtonModule, NgFor, NgIf, AsyncPipe, PostCardComponent, CreatePostComponent],
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss']
 })
