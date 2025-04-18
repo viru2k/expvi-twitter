@@ -1,6 +1,12 @@
 <div *ngFor="let comment of comments$ | async">
   <div style="padding: 10px;">
     <p-card >
+ <!-- Usuario -->
+  @if(comment.user_id){
+    <div class="user">
+      <p-avatar     image="https://randomuser.me/api/portraits/men/44.jpg" class="mr-2" size="large" shape="circle" />
+    </div>
+  }
 
       <p-scrollpanel [style]="{ width: '100%', height: '75px' }">
         <p>

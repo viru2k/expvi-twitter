@@ -1,0 +1,28 @@
+<div *ngIf="store.user$ | async as user">
+  <h2>{{ user.name }}</h2>
+  <p>{{ user.email }}</p>
+  <small>Miembro desde: {{ user.created_at | date }}</small>
+</div>
+
+<hr />
+
+<h3>Posts</h3>
+<ul *ngIf="store.posts$ | async as posts">
+  <li *ngFor="let post of posts">
+    {{ post.content?.text }}
+  </li>
+</ul>
+
+<h3>Likes</h3>
+<ul *ngIf="store.likes$ | async as likes">
+  <li *ngFor="let post of likes">
+    ❤️ {{ post.content?.text }}
+  </li>
+</ul>
+
+<h3>Comments</h3>
+<ul *ngIf="store.comments$ | async as comments">
+  <li *ngFor="let comment of comments">
+    💬 {{ comment.text }}
+  </li>
+</ul>

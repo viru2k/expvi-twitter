@@ -8,12 +8,13 @@ import { User } from './../../api/model/user';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { Router } from '@angular/router';
-
+import { AvatarModule } from 'primeng/avatar';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [CommonModule, ButtonModule,CardModule],
+  imports: [CommonModule, ButtonModule,CardModule, AvatarModule,ScrollPanelModule],
   templateUrl: './post-card.component.html',
   styleUrls: ['./post-card.component.scss']
 })
@@ -35,4 +36,9 @@ export class PostCardComponent {
   goToDetails(postId: number) {
     this.router.navigate(['/posts', postId]);
   }
+
+  gtoUserProfile(userId: number) {
+    this.router.navigate(['/user', userId]);
+  }
+
 }

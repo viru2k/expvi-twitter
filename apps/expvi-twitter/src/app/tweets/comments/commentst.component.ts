@@ -10,11 +10,12 @@ import { DialogModule } from "primeng/dialog";
 import { DividerModule } from 'primeng/divider';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { CardModule } from 'primeng/card';
+import { AvatarModule } from 'primeng/avatar';
 
 @Component({
   selector: 'app-comments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule, ButtonModule, DialogModule, DividerModule, ScrollPanelModule, CardModule],
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, ButtonModule, DialogModule, DividerModule, ScrollPanelModule, CardModule, AvatarModule  ],
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss']
 })

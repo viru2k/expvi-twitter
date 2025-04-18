@@ -1,0 +1,18 @@
+.comments-list {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+
+  div {
+    margin-bottom: 0.25rem;
+  }
+}
+
+.comment-form {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+
+  input {
+    flex: 1;
+  }
+}

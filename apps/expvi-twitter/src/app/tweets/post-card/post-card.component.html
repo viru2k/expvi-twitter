@@ -1,21 +1,24 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
 
-  <p-card  (click)="goToDetails(post.id!)">
+  <p-card  >
 
 
   <!-- Usuario -->
-  <div class="user">
-    <img
-      *ngIf="post.user?.avatar_url"
-      [src]="post.user?.avatar_url"
-      alt="Avatar"
-      class="avatar"
-    />
-    <span class="username">{{ post.user?.name || 'Usuario anónimo' }}</span>
-  </div>
 
+  @if(post.user_id){
+    <div class="user">
+      <p-avatar      image="https://randomuser.me/api/portraits/men/44.jpg" class="mr-2" size="large" shape="circle"  (click)="gtoUserProfile(post.user_id)"/>
+    </div>
+  }
   <!-- Contenido del post -->
-  <div class="content">
-    <p *ngIf="post.content?.text">{{ post.content?.text }}</p>
+
+  <div class="content"  (keypress)="goToDetails(post.id!)" (click)="goToDetails(post.id!)">
+    <p-scrollpanel [style]="{ width: '100%', height: '150px' }" >
+      <p>
+        {{ post.content?.text }}
+    </p>
+    </p-scrollpanel>
+
 
     <ng-container *ngIf="post.content && isPicture(post.content)">
       <img

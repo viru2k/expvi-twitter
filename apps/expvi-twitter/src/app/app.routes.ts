@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard'; // ajusta la ruta según tu estructura
 import { PostDetailsComponent } from './tweets/post-details/post-details.component';
+import { UserProfileComponent } from './tweets/user-profile/user-profile.component';
 
 export const appRoutes: Routes = [
   {
@@ -28,6 +29,11 @@ export const appRoutes: Routes = [
     path: 'posts/:id',
     canActivate: [AuthGuard],
     component: PostDetailsComponent
+  },
+  {
+    canActivate: [AuthGuard],
+    path: 'user/:id',
+    component: UserProfileComponent
   },
   {
     path: '',
