@@ -18,7 +18,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
     DialogModule,
     InputTextModule,
     TextareaModule,
-    ButtonModule
+    ButtonModule,
   ]
 })
 export class CreatePostComponent {
@@ -63,7 +63,7 @@ export class CreatePostComponent {
         this.close();
       },
       error: (err) => {
-        console.error('Error al crear el post', err);
+        console.error('Error creating post', err);
       }
     });
   }

@@ -22,13 +22,13 @@
     class="p-button-sm p-button-text"
     (click)="timelineStore.likePost(selectedPost?.id!)"
     severity="info"
-    aria-label="Me gusta"
+    aria-label="Like"
   ></p-button>
 
   <p-button
   *ngIf="selectedPost?.user_id === selectedPost?.user_id"
     icon="pi pi-trash"
-    label="Eliminar"
+    label="Delete"
     severity="danger"
     (click)="deletePost(selectedPost?.id!)"
   ></p-button>

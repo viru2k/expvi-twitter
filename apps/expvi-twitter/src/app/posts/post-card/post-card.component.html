@@ -1,16 +1,13 @@
 <!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
-
   <p-card  >
-
-
-  <!-- Usuario -->
+  <!-- Users -->
 
   @if(post.user_id){
     <div class="user">
       <p-avatar      image="https://randomuser.me/api/portraits/men/44.jpg" class="mr-2" size="large" shape="circle"  (click)="gtoUserProfile(post.user_id)"/>
     </div>
   }
-  <!-- Contenido del post -->
+  <!--  post content -->
 
   <div class="content"  (keypress)="goToDetails(post.id!)" (click)="goToDetails(post.id!)">
     <p-scrollpanel [style]="{ width: '100%', height: '150px' }" >
@@ -24,7 +21,7 @@
       <img
         [src]="post.content.picture_url"
         class="media"
-        alt="Imagen del post"
+        alt=" post image"
       />
     </ng-container>
 

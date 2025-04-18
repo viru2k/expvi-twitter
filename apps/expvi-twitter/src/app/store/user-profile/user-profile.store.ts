@@ -7,6 +7,8 @@ import { PostsService } from '../../api/api/posts.service';
 import { UsersService } from '../../api/api/users.service';
 import { CommentsService } from '../../api/api/comments.service';
 import { tap, catchError, EMPTY, forkJoin, exhaustMap } from 'rxjs';
+import { linkToGlobalState } from '../component-state.reducer';
+import { Store } from '@ngrx/store';
 
 interface UserProfileState {
   user?: User;
@@ -26,8 +28,9 @@ const DEFAULT_STATE: UserProfileState = {
 
 @Injectable({ providedIn: 'root' })
 export class UserProfileStore extends ComponentStore<UserProfileState> {
-  constructor(private postService: PostsService, private usersService: UsersService, private commentsService:CommentsService) {
-    super(DEFAULT_STATE);
+  constructor(  private globalStore: Store,private postService: PostsService, private usersService: UsersService, private commentsService:CommentsService) {
+     super(DEFAULT_STATE);
+       linkToGlobalState(this.state$, 'UserProfileStore', this.globalStore);
   }
 
   readonly user$ = this.select((s) => s.user);
