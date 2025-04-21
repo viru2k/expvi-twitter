@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { linkToGlobalState } from './../component-state.reducer';
  // Wrapper del API
 
-import { tap, switchMap, catchError, EMPTY, interval, withLatestFrom, map, forkJoin } from 'rxjs';
+import { tap, switchMap, catchError, EMPTY, interval, withLatestFrom, map } from 'rxjs';
 import { PostWithExtras } from '../models/post-with-extras.model';
 
 export interface TimelineState {

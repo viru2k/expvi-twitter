@@ -44,7 +44,7 @@ export class PostDetailsComponent implements OnInit {
   }
 
   deletePost(postId: number) {
-    if (confirm('¿Estás seguro de que quieres eliminar este post?')) {
+    if (confirm('Are you sure to delete this post?')) {
       this.timelineStore.deletePost(postId);
     }
   }

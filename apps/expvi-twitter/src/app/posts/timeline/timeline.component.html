@@ -8,7 +8,7 @@
   </div>
 
   <div #scrollAnchor class="scroll-anchor"></div>
-  <div *ngIf="isLoading$ | async" class="loading">Loading...</div>
+  <div *ngIf="isLoading$ | async" class="loading">Loading</div>
 
 </div>
 <!-- Modal de creación -->
@@ -22,3 +22,4 @@
   (click)="postModal.open()"
   aria-label="Crear nuevo post"
 ></button>
+

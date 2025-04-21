@@ -4,30 +4,30 @@
       pInputTextarea
       rows="3"
       formControlName="text"
-      placeholder="¿Qué estás pensando?"
+      placeholder="What's your opinion?"
     ></textarea>
 
     <div class="flex gap-2">
-      <button
-        pButton
-        type="button"
-        [class]="form.value.type === 'text' ? 'p-button-sm p-button-primary' : 'p-button-sm'"
-        (click)="form.patchValue({ type: 'text' })"
-      >Texto</button>
+      <p-button
+      severity="info"
+      label="Text"
+      (click)="form.patchValue({ type: 'text' })"
+    />
+  </div>
+    <div class="flex gap-2">
+      <p-button
+      severity="info"
+      label="Image"
+      (click)="form.patchValue({ type: 'picture' })"
+    />
+  </div>
+    <div class="flex gap-2">
+      <p-button
+      severity="info"
+      label="Video"
+      (click)="form.patchValue({ type: 'video' })"
+    />
 
-      <button
-        pButton
-        type=""
-        [class]="form.value.type === 'picture' ? 'p-button-sm p-button-primary' : 'p-button-sm'"
-        (click)="form.patchValue({ type: 'picture' })"
-      >Imagen</button>
-
-      <button
-        pButton
-        type="button"
-        [class]="form.value.type === 'video' ? 'p-button-sm p-button-primary' : 'p-button-sm'"
-        (click)="form.patchValue({ type: 'video' })"
-      >Video</button>
     </div>
 
     <input

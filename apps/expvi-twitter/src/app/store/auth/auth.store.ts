@@ -79,11 +79,11 @@ export class AuthStore extends ComponentStore<AuthState> {
               this.setToken(token);
               this.router.navigate(['/tweets']);
             } else {
-              this.setLoginError('Token no válido');
+              this.setLoginError('Invalid Token');
             }
           }),
           catchError(() => {
-            this.setLoginError('Error al iniciar sesión');
+            this.setLoginError('Error at login');
             return EMPTY;
           }),
           tap(() => this.setLoading(false))
@@ -111,11 +111,11 @@ export class AuthStore extends ComponentStore<AuthState> {
                 this.setToken(token);
                 this.router.navigate(['/tweets']);
               } else {
-                this.setLoginError('Token no válido');
+                this.setLoginError('Invalid Token');
               }
             }),
             catchError(() => {
-              this.setLoginError('Error al registrar');
+              this.setLoginError('Error at register');
               return EMPTY;
             }),
             tap(() => this.setLoading(false))

@@ -1,7 +1,7 @@
 <div *ngIf="store.user$ | async as user">
   <h2>{{ user.name }}</h2>
   <p>{{ user.email }}</p>
-  <small>Miembro desde: {{ user.created_at | date }}</small>
+  <small>Member since: {{ user.created_at | date }}</small>
 </div>
 
 <hr />
@@ -13,7 +13,7 @@
   </li>
 </ul>
 
-<h3>Likes</h3>
+<h3>Like</h3>
 <ul *ngIf="store.likes$ | async as likes">
   <li *ngFor="let post of likes">
     ❤️ {{ post.content?.text }}
